@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const userHandle = express.Router();
-
+const productsHandle = express.Router();
 const users = ["John", "Mark"];
 
 /*const logUsers = (req, res, next) => {
@@ -62,6 +62,7 @@ app.use((err, req, res, next) => {
 });
 
 app.use("/users", userHandle);
+app.use("/products", productsHandle);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
