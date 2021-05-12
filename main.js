@@ -2,12 +2,15 @@ const express = require("express");
 
 const app = express();
 const port = 3000;
+const userHandle = express.Router()
 
-const users = [];
-const logUsers = (req, res, next) => {
-  console.log(users);
-  next();
-};
+const users = ["John", "Mark"];
+
+/*const logUsers = (req, res, next) => {
+    console.log(users);
+    next();
+  };
+*/
 
 const logMethod =
   ("/users",
@@ -16,9 +19,24 @@ const logMethod =
     next();
   });
 
+  userHandle.use((req, res, next) => {
+    console.log(users);
+    next();
+  });
+
+const create = (req, res, next) => {
+    if (req.body.name){
+        console.log(req.body.name);
+        next();
+    }
+  };
+
 app.use(express.json());
-app.use(logUsers);
+// app.use(logUsers);
 app.use(logMethod);
+app.use("/users/create",create)
+  app.use("/users", userHandle);
+
 
 if (users.length > 0) {
   app.get("/users", (req, res, next) => {
@@ -32,6 +50,12 @@ if (users.length > 0) {
     next(err);
   });
 }
+
+app.post("/users/create" , (req,res) =>{
+    users.push(req.body.name)
+    res.json(users)
+
+})
 
 app.use((err, req, res, next) => {
   res.json(err.message);
