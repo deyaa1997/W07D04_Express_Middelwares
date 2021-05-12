@@ -2,7 +2,7 @@ const express = require("express");
 
 const app = express();
 const port = 3000;
-const userHandle = express.Router()
+const userHandle = express.Router();
 
 const users = ["John", "Mark"];
 
@@ -19,23 +19,16 @@ const logMethod =
     next();
   });
 
-  userHandle.use((req, res, next) => {
-    console.log(users);
-    next();
-  });
+userHandle.use((req, res, next) => {
+  console.log(users);
+  next();
+});
 
-const create = (req, res, next) => {
-    if (req.body.name){
-        console.log(req.body.name);
-        next();
-    }
-  };
+
 
 app.use(express.json());
 // app.use(logUsers);
 app.use(logMethod);
-app.use("/users/create",create)
-  app.use("/users", userHandle);
 
 
 if (users.length > 0) {
@@ -51,15 +44,24 @@ if (users.length > 0) {
   });
 }
 
-app.post("/users/create" , (req,res) =>{
-    users.push(req.body.name)
-    res.json(users)
+userHandle.use("/create", (req, res, next) => {
+    if (req.body.name) {
+      console.log(req.body.name);
+      next();
+    }
+  });
 
-})
+  
+userHandle.post("/create", (req, res) => {
+  users.push(req.body.name);
+  res.json(users);
+});
 
 app.use((err, req, res, next) => {
   res.json(err.message);
 });
+
+app.use("/users", userHandle);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
