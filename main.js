@@ -13,19 +13,24 @@ const products = ["keyboard", "mouse"];
   };
 */
 
-const logMethod = (req, res, next) => {
-  console.log(req.method);
-  next();
-};
+const logMethod =
+  
+  (req, res, next) => {
+    console.log(req.method);
+    next();
+  };
 
 userHandle.use((req, res, next) => {
   console.log(users);
   next();
 });
 
+
+
 app.use(express.json());
 // app.use(logUsers);
-app.use("/users", logMethod);
+app.use("/users" ,logMethod);
+
 
 if (users.length > 0) {
   app.get("/users", (req, res, next) => {
@@ -41,15 +46,21 @@ if (users.length > 0) {
 }
 
 userHandle.use("/create", (req, res, next) => {
-  if (req.body.name) {
-    console.log(req.body.name);
-    next();
-  }
-});
+    if (req.body.name) {
+      console.log(req.body.name);
+      next();
+    }
+  });
 
+  
 userHandle.post("/create", (req, res) => {
   users.push(req.body.name);
   res.json(users);
+});
+
+productsHandle.use("*", (req, res, next) => {
+  console.log("products router")
+  next()
 });
 
 productsHandle.post("/update", (req, res) => {
@@ -58,18 +69,18 @@ productsHandle.post("/update", (req, res) => {
         "update" : "keyboard",
     "newValue" : "ss"}
     */
-  let status = false;
-  for (let x = 0; x < products.length; x++) {
-    if (req.body.update === products[x]) {
-      products[x] = req.body.newValue;
-      status = true;
-      res.json("Your products Update");
+  let status = false
+  for (let x = 0 ; x < products.length ; x++){
+    if (req.body.update === products[x]){
+      products[x]= req.body.newValue
+      status = true
+      res.json("Your products Update")
     }
   }
   if (status === false) {
-    res.json("You cant update this items");
+    res.json("You cant update this items")
   }
-  console.log(products);
+  console.log(products)
 });
 
 app.use((err, req, res, next) => {
